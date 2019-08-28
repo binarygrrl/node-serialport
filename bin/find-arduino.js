@@ -1,16 +1,13 @@
 #!/usr/bin/env node
-'use strict';
 
-// outputs the path to an arduino or nothing
+// outputs the path to an Arduino to stdout or an error to stderror
 
-const serialport = require('../');
-serialport.list()
-  .then(ports => ports.find(port => /arduino/i.test(port.manufacturer)))
-  .then(port => {
-    if (!port) { throw new Error('Arduino Not found') }
-    console.log(port.comName);
-  })
-  .catch((err) => {
-    console.error(err.message);
-    process.exit(1);
-  });
+const SerialPort = require('../packages/serialport')
+SerialPort.list().then(ports => {
+  const port = ports.find(port => /arduino/i.test(port.manufacturer))
+  if (!port) {
+    console.error('Arduino Not found')
+    process.exit(1)
+  }
+  console.log(port.path)
+})
